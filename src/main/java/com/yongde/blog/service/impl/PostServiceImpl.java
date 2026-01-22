@@ -29,8 +29,20 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> listPosts() {
-        return List.of();
+    public List<PostResponseDto> getPosts() {
+        List<Post> posts = postRepository.findAll();
+
+        return posts.stream()
+                // equivalent to post -> postMapper.toDto(post) which basically means for
+                // each post in posts, convert it to a PostResponseDto using the postMapper.
+                .map(postMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public PostResponseDto getPost(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow();
+        return postMapper.toDto(post);
     }
 
     @Override

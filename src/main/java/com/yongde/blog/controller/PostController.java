@@ -5,10 +5,9 @@ import com.yongde.blog.dto.response.PostResponseDto;
 import com.yongde.blog.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 // Adhere to api naming convention
 @RestController
@@ -25,6 +24,20 @@ public class PostController {
             @Valid @RequestBody CreatePostRequestDto createPostRequestDto
     ) {
         PostResponseDto postResponseDto = postService.createPost(createPostRequestDto);
+        return ResponseEntity.ok(postResponseDto);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
+        List<PostResponseDto> posts = postService.getPosts();
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping (path = "/{postId}")
+    public ResponseEntity<PostResponseDto> getPost(
+            @PathVariable Long postId
+    ){
+        PostResponseDto postResponseDto = postService.getPost(postId);
         return ResponseEntity.ok(postResponseDto);
     }
 }
