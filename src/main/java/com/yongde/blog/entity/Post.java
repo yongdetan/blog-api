@@ -45,6 +45,17 @@ public class Post {
         this.tags = tags;
     }
 
+    @PrePersist
+    public void onCreate() {
+        this.created = Instant.now();
+        this.updated = Instant.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.updated = Instant.now();
+    }
+
     public Long getId() {
         return id;
     }
