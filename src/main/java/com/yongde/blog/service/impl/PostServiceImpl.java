@@ -3,6 +3,7 @@ package com.yongde.blog.service.impl;
 import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
 import com.yongde.blog.entity.Post;
+import com.yongde.blog.exception.PostNotFoundException;
 import com.yongde.blog.mapper.PostMapper;
 import com.yongde.blog.repository.PostRepository;
 import com.yongde.blog.service.PostService;
@@ -41,7 +42,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto getPost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow();
+        // orElseThrow() takes in an exceptionSupplier, basically a functional interface that will get executed if needed.
+        // here instead of constructing an exceptionSupplier, we use lambda expression.
+        // in the background, the compiler converts this lambda expression into a supplier object. it uses target typing to infer.
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
         return postMapper.toDto(post);
     }
 
