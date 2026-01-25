@@ -9,6 +9,7 @@ import com.yongde.blog.repository.PostRepository;
 import com.yongde.blog.service.PostService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -51,7 +52,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostResponseDto updatePost(Long postId, CreatePostRequestDto createPostRequestDto) {
-        return null;
+
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        post.setTitle(createPostRequestDto.title());
+        post.setContent(createPostRequestDto.content());
+        post.setCategory(createPostRequestDto.category());
+        post.setTags(createPostRequestDto.tags());
+        post.setUpdated(Instant.now());
+
+        return postMapper.toDto(post);
+
     }
 
     @Override
