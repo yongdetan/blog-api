@@ -60,4 +60,12 @@ public class PostController {
         PostResponseDto postResponseDto = postService.updatePost(postId, createPostRequestDto);
         return ResponseEntity.ok(postResponseDto);
     }
+
+    @DeleteMapping(path = "/{postId}")
+    public ResponseEntity<Void> deletePost(
+            @PathVariable Long postId
+    ){
+        postService.deletePost(postId);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
