@@ -2,18 +2,17 @@ package com.yongde.blog.dto.request;
 
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.NotBlank;
-import org.hibernate.validator.constraints.Length;
-
+import jakarta.validation.constraints.Size;
 import java.util.List;
 
 public record CreatePostRequestDto(
 
         @NotBlank(message = ERROR_MESSAGE_TITLE_BLANK)
-        @Length(min = 1, max = 255, message = ERROR_MESSAGE_TITLE_LENGTH)
+        @Size(min = 1, max = 255, message = ERROR_MESSAGE_TITLE_LENGTH)
         String title,
 
         @NotBlank(message = ERROR_MESSAGE_CONTENT_BLANK)
-        @Length(max=5000, message = ERROR_MESSAGE_CONTENT_LENGTH)
+        @Size(max=5000, message = ERROR_MESSAGE_CONTENT_LENGTH)
         String content,
 
         @Nullable

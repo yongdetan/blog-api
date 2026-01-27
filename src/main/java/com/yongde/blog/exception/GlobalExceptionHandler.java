@@ -32,6 +32,6 @@ public class GlobalExceptionHandler {
         errorMessages.add(ex.getMessage());
 
         ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
-        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 }

@@ -14,7 +14,6 @@ public class PostMapper {
                 createPostRequestDto.content(),
                 createPostRequestDto.category(),
                 createPostRequestDto.tags()
-
         );
     }
 

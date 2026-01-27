@@ -45,17 +45,60 @@ public class Post {
         this.tags = tags;
     }
 
+    private Post(Builder builder) {
+        this.title = builder.title;
+        this.content = builder.content;
+        this.category = builder.category;
+        this.tags = builder.tags;
+    }
+
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private String title;
+        private String content;
+        private String category;
+        private List<String> tags;
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder content(String content) {
+            this.content = content;
+            return this;
+        }
+
+        public Builder category(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder tags(List<String> tags) {
+            this.tags = tags;
+            return this;
+        }
+
+        public Post build() {
+            return new Post(this);
+        }
+    }
+
     @PrePersist
     public void onCreate() {
         this.created = Instant.now();
         this.updated = Instant.now();
     }
-
     @PreUpdate
     public void onUpdate() {
         this.updated = Instant.now();
     }
 
+
+    // Getters and Setters
     public Long getId() {
         return id;
     }
