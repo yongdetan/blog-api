@@ -10,7 +10,8 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 
 import java.util.List;
 
-
+// We are using DataJpaTest for unit testing for repo layer
+// Technically, DataJpaTest already configures H2 db but we add AutoConfigureTestDatabase for clarity.
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
 public class BlogRepositoryTests {
@@ -19,7 +20,7 @@ public class BlogRepositoryTests {
     private PostRepository postRepository;
 
     @Test
-    public void PostRepository_SavePost_ReturnSavedPost() {
+    public void PostRepository_SavePost_ReturnsSavedPost() {
         //Using the Arrange-Act-Assert (AAA) pattern for unit testing.
         //Arrange
         Post post = Post.builder()
@@ -35,8 +36,8 @@ public class BlogRepositoryTests {
         //Assert (using assertj assertion library)
         Assertions.assertThat(savedPost).isNotNull();
         Assertions.assertThat(savedPost.getId()).isGreaterThan(0);
-
-
+        Assertions.assertThat(savedPost.getCreated()).isNotNull();
+        Assertions.assertThat(savedPost.getUpdated()).isNotNull();
     }
 
 }

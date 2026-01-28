@@ -26,8 +26,8 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostResponseDto createPost(CreatePostRequestDto createPostRequestDto) {
         Post newPost = postMapper.toEntity(createPostRequestDto);
-        postRepository.save(newPost);
-        return postMapper.toDto(newPost);
+        Post savedPost = postRepository.save(newPost);
+        return postMapper.toDto(savedPost);
     }
 
     @Override

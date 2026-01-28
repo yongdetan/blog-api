@@ -28,7 +28,7 @@ public class PostController {
             @Valid @RequestBody CreatePostRequestDto createPostRequestDto
     ) {
         PostResponseDto postResponseDto = postService.createPost(createPostRequestDto);
-
+        System.out.println(postResponseDto.id());
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{postId}")
