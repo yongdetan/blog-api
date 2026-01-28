@@ -140,4 +140,91 @@ public class BlogServiceTests {
         verify(postRepository).findById(postId);
         verifyNoInteractions(postMapper);
     }
+
+    @Test
+    public void PostService_UpdatePost_ReturnsPostResponseDto() {
+        Long postId = 1L;
+
+        CreatePostRequestDto createPostRequestDto = new CreatePostRequestDto(
+                "post",
+                null,
+                null,
+                null
+        );
+
+        Post post = Post.builder().title("post").build();
+
+        PostResponseDto updatedDto = new PostResponseDto(
+                1L,
+                "updated_post",
+                null,
+                null,
+                null,
+                null,
+                null
+        );
+
+        when(postRepository.findById(postId)).thenReturn(Optional.ofNullable(post));
+        when(postMapper.toDto(post)).thenReturn(updatedDto);
+
+        PostResponseDto result = postService.updatePost(postId, createPostRequestDto);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.title()).isEqualTo(updatedDto.title());
+
+        verify(postRepository).findById(postId);
+        verify(postMapper).toDto(post);
+    }
+
+    @Test
+    public void PostService_UpdatePost_ThrowsPostNotFoundException() {
+        Long postId = 1L;
+
+        CreatePostRequestDto createPostRequestDto = new CreatePostRequestDto(
+                "post",
+                null,
+                null,
+                null
+        );
+
+        when(postRepository.findById(postId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> postService.updatePost(postId, createPostRequestDto))
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessageContaining(postId.toString());
+
+        verify(postRepository).findById(postId);
+        // check that postMapper isnt called. if exception is raised, postMapper should not be called.
+        verifyNoInteractions(postMapper);
+    }
+
+    @Test
+    public void PostService_DeletePost_DeletesSuccessfully() {
+        Long postId = 1L;
+
+        Post post = Post.builder().title("post").build();
+
+        when(postRepository.findById(postId)).thenReturn(Optional.ofNullable(post));
+
+        postService.deletePost(postId);
+
+        verify(postRepository).findById(postId);
+        verify(postRepository).delete(post);
+    }
+
+    @Test
+    public void PostService_DeletePost_ThrowsPostNotFoundException() {
+        Long postId = 1L;
+
+        when(postRepository.findById(postId)).thenReturn(Optional.empty());
+
+        Assertions.assertThatThrownBy(() -> postService.deletePost(postId))
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessageContaining(postId.toString());
+
+        // verify that delete method is not called
+        // dont use verifyNoInteractions unlike the previous unit tests because it requires a mock object.
+        verify(postRepository, never()).delete(any());
+    }
+
 }
