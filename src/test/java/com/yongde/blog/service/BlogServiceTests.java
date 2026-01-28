@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
@@ -38,34 +37,28 @@ public class BlogServiceTests {
 
         //Arrange
         CreatePostRequestDto createPostRequestDto = new CreatePostRequestDto(
-                "First Post",
-                "Hello World!",
-                "Tech",
-                List.of("First", "Post")
+                "post",
+                null,
+                null,
+                null
         );
 
         Post post = Post.builder()
-                .title("First Post")
-                .content("Hello World!")
-                .category("Tech")
-                .tags(List.of("First", "Post"))
+                .title("post")
                 .build();
 
         Post savedPost = Post.builder()
-                .title("First Post")
-                .content("Hello World!")
-                .category("Tech")
-                .tags(List.of("First", "Post"))
+                .title("post")
                 .build();
 
         PostResponseDto postResponseDto = new PostResponseDto(
                 1L,
-                "First Post",
-                "Hello World!",
-                "Tech",
-                List.of("First", "Post"),
-                Instant.now(),
-                Instant.now()
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
         );
         when(postMapper.toEntity(createPostRequestDto)).thenReturn(post);
         when(postRepository.save(post)).thenReturn(savedPost);
@@ -76,7 +69,7 @@ public class BlogServiceTests {
 
         //Assert
         Assertions.assertThat(result).isNotNull();
-        Assertions.assertThat(result.title()).isEqualTo("First Post");
+        Assertions.assertThat(result.title()).isEqualTo("post");
 
         verify(postMapper).toEntity(createPostRequestDto);
         verify(postRepository).save(post);
@@ -84,7 +77,7 @@ public class BlogServiceTests {
     }
 
     @Test
-    public void PostService_GetPosts_ReturnsListOfPostResponseDto() {
+    public void PostService_GetAllPosts_ReturnsListOfPostResponseDto() {
         //Arrange
         Post post1 = Post.builder().title("post1").build();
         Post post2 = Post.builder().title("post2").build();
@@ -154,6 +147,8 @@ public class BlogServiceTests {
 
         Post post = Post.builder().title("post").build();
 
+        Post updatedPost = Post.builder().title("updated_post").build();
+
         PostResponseDto updatedDto = new PostResponseDto(
                 1L,
                 "updated_post",
@@ -165,7 +160,8 @@ public class BlogServiceTests {
         );
 
         when(postRepository.findById(postId)).thenReturn(Optional.ofNullable(post));
-        when(postMapper.toDto(post)).thenReturn(updatedDto);
+        when(postRepository.save(post)).thenReturn(updatedPost);
+        when(postMapper.toDto(updatedPost)).thenReturn(updatedDto);
 
         PostResponseDto result = postService.updatePost(postId, createPostRequestDto);
 
@@ -173,7 +169,8 @@ public class BlogServiceTests {
         Assertions.assertThat(result.title()).isEqualTo(updatedDto.title());
 
         verify(postRepository).findById(postId);
-        verify(postMapper).toDto(post);
+        verify(postRepository).save(post);
+        verify(postMapper).toDto(updatedPost);
     }
 
     @Test
