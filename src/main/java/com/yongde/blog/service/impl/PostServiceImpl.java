@@ -60,7 +60,8 @@ public class PostServiceImpl implements PostService {
         post.setTags(createPostRequestDto.tags());
         post.setUpdated(Instant.now());
 
-        return postMapper.toDto(post);
+        Post updatedPost = postRepository.save(post);
+        return postMapper.toDto(updatedPost);
 
     }
 
