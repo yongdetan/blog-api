@@ -13,8 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -107,7 +105,7 @@ public class BlogServiceTests {
         Post post = Post.builder().title("post").build();
         PostResponseDto postResponseDto = new PostResponseDto(1L, "post", null, null, null, null, null );
 
-        when(postRepository.findById(1L)).thenReturn(Optional.ofNullable(post));
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
         when(postMapper.toDto(post)).thenReturn(postResponseDto);
 
         PostResponseDto result = postService.getPost(1L);
@@ -159,7 +157,7 @@ public class BlogServiceTests {
                 null
         );
 
-        when(postRepository.findById(postId)).thenReturn(Optional.ofNullable(post));
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
         when(postRepository.save(post)).thenReturn(updatedPost);
         when(postMapper.toDto(updatedPost)).thenReturn(updatedDto);
 
@@ -191,7 +189,7 @@ public class BlogServiceTests {
                 .hasMessageContaining(postId.toString());
 
         verify(postRepository).findById(postId);
-        // check that postMapper isnt called. if exception is raised, postMapper should not be called.
+        // check that postMapper is not called. if exception is raised, postMapper should not be called.
         verifyNoInteractions(postMapper);
     }
 
@@ -201,7 +199,7 @@ public class BlogServiceTests {
 
         Post post = Post.builder().title("post").build();
 
-        when(postRepository.findById(postId)).thenReturn(Optional.ofNullable(post));
+        when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 
         postService.deletePost(postId);
 
@@ -220,7 +218,7 @@ public class BlogServiceTests {
                 .hasMessageContaining(postId.toString());
 
         // verify that delete method is not called
-        // dont use verifyNoInteractions unlike the previous unit tests because it requires a mock object.
+        // do not use verifyNoInteractions unlike the previous unit tests because it requires a mock object.
         verify(postRepository, never()).delete(any());
     }
 
