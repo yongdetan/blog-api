@@ -10,11 +10,11 @@ import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabas
 
 import java.util.List;
 
-// We are using DataJpaTest for unit testing for repo layer
+// We are using DataJpaTest for "unit testing" for repo layer
 // Technically, DataJpaTest already configures H2 db but we add AutoConfigureTestDatabase for clarity.
 @DataJpaTest
 @AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class BlogRepositoryTests {
+public class PostRepositoryTests {
 
     @Autowired
     private PostRepository postRepository;

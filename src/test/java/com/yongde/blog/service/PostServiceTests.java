@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class BlogServiceTests {
+public class PostServiceTests {
 
     @Mock
     private PostRepository postRepository;
