@@ -1,11 +1,12 @@
 package com.yongde.blog.exception;
 
 import java.time.Instant;
-import java.util.List;
+import java.util.Map;
 
 public record ApiResponse(
 
         Instant timestamp,
-        List<String> messages
+        Map<String, String> fieldErrors
+
 ) {
 }
