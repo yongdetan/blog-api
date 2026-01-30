@@ -31,7 +31,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponseDto> getAllPosts() {
         List<Post> posts = postRepository.findAll();
 
         return posts.stream()

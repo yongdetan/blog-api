@@ -88,7 +88,7 @@ public class PostServiceTests {
         when(postMapper.toDto(post2)).thenReturn(postResponseDto2);
 
         //Act
-        List<PostResponseDto> posts = postService.getPosts();
+        List<PostResponseDto> posts = postService.getAllPosts();
 
         //Assert
         Assertions.assertThat(posts).hasSize(2);
