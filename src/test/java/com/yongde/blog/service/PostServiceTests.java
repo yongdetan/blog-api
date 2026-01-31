@@ -51,7 +51,7 @@ public class PostServiceTests {
 
         PostResponseDto postResponseDto = new PostResponseDto(
                 1L,
-                null,
+                "post",
                 null,
                 null,
                 null,
