@@ -9,12 +9,10 @@ import org.springframework.stereotype.Component;
 public class PostMapper {
 
     public Post toEntity(CreatePostRequestDto createPostRequestDto) {
-        return new Post(
-                createPostRequestDto.title(),
-                createPostRequestDto.content(),
-                createPostRequestDto.category(),
-                createPostRequestDto.tags()
-        );
+        Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content());
+        post.setCategory(createPostRequestDto.category());
+        post.setTags(createPostRequestDto.tags());
+        return post;
     }
 
     public PostResponseDto toDto(Post post) {

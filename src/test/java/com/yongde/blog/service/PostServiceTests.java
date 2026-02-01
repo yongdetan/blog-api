@@ -36,23 +36,19 @@ public class PostServiceTests {
         //Arrange
         CreatePostRequestDto createPostRequestDto = new CreatePostRequestDto(
                 "post",
-                null,
+                "content",
                 null,
                 null
         );
 
-        Post post = Post.builder()
-                .title("post")
-                .build();
+        Post post = new Post("post", "content");
 
-        Post savedPost = Post.builder()
-                .title("post")
-                .build();
+        Post savedPost = new Post("post", "content");
 
         PostResponseDto postResponseDto = new PostResponseDto(
                 1L,
                 "post",
-                null,
+                "content",
                 null,
                 null,
                 null,
@@ -77,11 +73,11 @@ public class PostServiceTests {
     @Test
     public void PostService_GetAllPosts_ReturnsListOfPostResponseDto() {
         //Arrange
-        Post post1 = Post.builder().title("post1").build();
-        Post post2 = Post.builder().title("post2").build();
+        Post post1 = new Post("post1", "content1");
+        Post post2 = new Post("post2", "content2");
 
-        PostResponseDto postResponseDto1 = new PostResponseDto(1L, "post1", null, null, null, null, null );
-        PostResponseDto postResponseDto2 = new PostResponseDto(2L, "post2", null, null, null, null, null );
+        PostResponseDto postResponseDto1 = new PostResponseDto(1L, "post1", "content1", null, null, null, null );
+        PostResponseDto postResponseDto2 = new PostResponseDto(2L, "post2", "content2", null, null, null, null );
 
         when(postRepository.findAll()).thenReturn(List.of(post1,post2));
         when(postMapper.toDto(post1)).thenReturn(postResponseDto1);
@@ -102,8 +98,8 @@ public class PostServiceTests {
 
     @Test
     public void PostService_GetPost_ReturnsPostResponseDto() {
-        Post post = Post.builder().title("post").build();
-        PostResponseDto postResponseDto = new PostResponseDto(1L, "post", null, null, null, null, null );
+        Post post = new Post("post", "content");
+        PostResponseDto postResponseDto = new PostResponseDto(1L, "post", "content", null, null, null, null );
 
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
         when(postMapper.toDto(post)).thenReturn(postResponseDto);
@@ -138,19 +134,19 @@ public class PostServiceTests {
 
         CreatePostRequestDto createPostRequestDto = new CreatePostRequestDto(
                 "post",
-                null,
+                "content",
                 null,
                 null
         );
 
-        Post post = Post.builder().title("post").build();
+        Post post = new Post("post", "content");
 
-        Post updatedPost = Post.builder().title("updated_post").build();
+        Post updatedPost = new Post("updated_post", "content");
 
         PostResponseDto updatedDto = new PostResponseDto(
                 1L,
                 "updated_post",
-                null,
+                "content",
                 null,
                 null,
                 null,
@@ -197,7 +193,7 @@ public class PostServiceTests {
     public void PostService_DeletePost_DeletesSuccessfully() {
         Long postId = 1L;
 
-        Post post = Post.builder().title("post").build();
+        Post post = new Post("post", "content");
 
         when(postRepository.findById(postId)).thenReturn(Optional.of(post));
 

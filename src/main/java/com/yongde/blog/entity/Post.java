@@ -38,53 +38,15 @@ public class Post {
 
     // DO NOT include id to prevent caller from inserting id.
     // DO NOT include audit fields
-    public Post(String title, String content, String category, List<String> tags) {
+    public Post(String title, String content) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Post title is required");
+        }
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("Post content is required");
+        }
         this.title = title;
         this.content = content;
-        this.category = category;
-        this.tags = tags;
-    }
-
-    private Post(Builder builder) {
-        this.title = builder.title;
-        this.content = builder.content;
-        this.category = builder.category;
-        this.tags = builder.tags;
-    }
-
-    public static Builder builder() {
-        return new Builder();
-    }
-
-    public static class Builder {
-        private String title;
-        private String content;
-        private String category;
-        private List<String> tags;
-
-        public Builder title(String title) {
-            this.title = title;
-            return this;
-        }
-
-        public Builder content(String content) {
-            this.content = content;
-            return this;
-        }
-
-        public Builder category(String category) {
-            this.category = category;
-            return this;
-        }
-
-        public Builder tags(List<String> tags) {
-            this.tags = tags;
-            return this;
-        }
-
-        public Post build() {
-            return new Post(this);
-        }
     }
 
     @PrePersist
@@ -97,7 +59,6 @@ public class Post {
         this.updated = Instant.now();
     }
 
-
     // Getters and Setters
     public Long getId() {
         return id;
@@ -108,6 +69,9 @@ public class Post {
     }
 
     public void setTitle(String title) {
+        if (title == null || title.isBlank()) {
+            throw new IllegalArgumentException("Post title is required");
+        }
         this.title = title;
     }
 
@@ -116,6 +80,9 @@ public class Post {
     }
 
     public void setContent(String content) {
+        if (content == null || content.isBlank()) {
+            throw new IllegalArgumentException("Post content is required");
+        }
         this.content = content;
     }
 
@@ -137,10 +104,6 @@ public class Post {
 
     public Instant getCreated() {
         return created;
-    }
-
-    public void setCreated(Instant created) {
-        this.created = created;
     }
 
     public Instant getUpdated() {

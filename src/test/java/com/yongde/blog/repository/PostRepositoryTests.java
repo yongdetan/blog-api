@@ -23,12 +23,9 @@ public class PostRepositoryTests {
     public void PostRepository_SavePost_ReturnsSavedPost() {
         //Using the Arrange-Act-Assert (AAA) pattern for unit testing.
         //Arrange
-        Post post = Post.builder()
-                .title("First Post")
-                .content("Hello World!")
-                .category("Test")
-                .tags(List.of("First", "Test"))
-                .build();
+        Post post = new Post("First Post", "Hello World!");
+        post.setCategory("Test");
+        post.setTags(List.of("First", "Test"));
 
         //Act
         Post savedPost = postRepository.save(post);
