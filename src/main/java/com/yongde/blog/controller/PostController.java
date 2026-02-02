@@ -27,14 +27,12 @@ public class PostController {
             @Valid @RequestBody CreatePostRequestDto createPostRequestDto
     ) {
         PostResponseDto postResponseDto = postService.createPost(createPostRequestDto);
-        System.out.println(postResponseDto.id());
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{postId}")
                 .buildAndExpand(postResponseDto.id())
                 .toUri();
 
-        System.out.println(location);
         return ResponseEntity.created(location).body(postResponseDto);
     }
     @GetMapping
