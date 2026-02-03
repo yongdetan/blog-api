@@ -1,5 +1,6 @@
 package com.yongde.blog.dto.request;
 
+import com.yongde.validator.annotation.ExistingEmail;
 import com.yongde.validator.annotation.PasswordMatch;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -13,8 +14,9 @@ public record CreateUserRequestDto(
         @NotBlank(message = ERROR_MESSAGE_LASTNAME_BLANK)
         String lastName,
 
-        @Email(message = ERROR_MESSAGE_EMAIL_INVALID)
         @NotBlank(message = ERROR_MESSAGE_EMAIL_BLANK)
+        @Email(message = ERROR_MESSAGE_EMAIL_INVALID)
+        @ExistingEmail
         String email,
 
         @NotBlank(message = ERROR_MESSAGE_PASSWORD_BLANK)

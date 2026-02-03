@@ -22,12 +22,14 @@ public class PasswordMatchValidator implements ConstraintValidator<PasswordMatch
             return true;
         }
 
+        //  converting the client request object into BeanWrapperImpl so that we can retrieve field data easily without manually using reflection
         Object password = new BeanWrapperImpl(value).getPropertyValue(passwordField);
         Object confirmPassword = new BeanWrapperImpl(value).getPropertyValue(confirmPasswordField);
 
         boolean valid = password != null && password.equals(confirmPassword);
 
         if (!valid) {
+            //buildConstraintViolationWithTemplate is used to create validation messages
             context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate())
                     .addPropertyNode(confirmPasswordField) // attach message to confirmPassword
                     .addConstraintViolation();

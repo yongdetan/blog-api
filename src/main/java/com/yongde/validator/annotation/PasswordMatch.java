@@ -12,8 +12,13 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = PasswordMatchValidator.class)
 public @interface PasswordMatch {
 
+    //error message
     String message() default "Passwords do not match.";
+
+    // groups and payload is required by jakarta.validation
+    // groups is used to "limit" the validation execution on certain classes
     Class<?>[] groups() default {};
+    // payload is used to add additional metadata to the validation.
     Class<? extends Payload>[] payload() default {};
 
     String passwordField();
