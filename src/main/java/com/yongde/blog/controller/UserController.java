@@ -14,23 +14,5 @@ import java.net.URI;
 @RequestMapping(path = "api/v1/users")
 public class UserController {
 
-    private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-
-    @PostMapping
-    public ResponseEntity<UserResponseDto> createUser(
-            @Valid @RequestBody CreateUserRequestDto createUserRequestDto
-    ){
-        UserResponseDto userResponseDto = userService.createUser(createUserRequestDto);
-        URI location = ServletUriComponentsBuilder
-                .fromCurrentRequest()
-                .path("/{userId}")
-                .buildAndExpand(userResponseDto.id())
-                .toUri();
-
-        return ResponseEntity.created(location).body(userResponseDto);
-    }
 }

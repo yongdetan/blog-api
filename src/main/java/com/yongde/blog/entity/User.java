@@ -10,7 +10,7 @@ public class User {
 
     @Id
     @GeneratedValue()
-    private long id;
+    private Long id;
 
     @Column(nullable = false)
     private String firstName;

@@ -45,4 +45,14 @@ public class GlobalExceptionHandler {
         ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(EmailExistsException.class)
+    public ResponseEntity<ApiResponse> handleEmailExistsException(EmailExistsException ex) {
+
+        Map<String, String> errorMessages = Map.of("email", ex.getMessage());
+
+        ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
 }
