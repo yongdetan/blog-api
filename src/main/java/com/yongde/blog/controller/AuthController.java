@@ -1,7 +1,9 @@
 package com.yongde.blog.controller;
 
 import com.yongde.blog.dto.request.CreateUserRequestDto;
+import com.yongde.blog.dto.request.LoginRequestDto;
 import com.yongde.blog.dto.response.UserResponseDto;
+import com.yongde.blog.service.AuthService;
 import com.yongde.blog.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,11 @@ import java.net.URI;
 public class AuthController {
 
     private final UserService userService;
+    private final AuthService authService;
 
-    public AuthController(UserService userService) {
+    public AuthController(UserService userService, AuthService authService) {
         this.userService = userService;
+        this.authService = authService;
     }
 
     @PostMapping(path = "/register")
@@ -35,8 +39,10 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public String test() {
-        return "works";
+    public String login(
+            @RequestBody LoginRequestDto loginRequestDto
+    ){
+        return authService.verifyAccount(loginRequestDto);
     }
 
 }
