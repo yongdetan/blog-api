@@ -2,6 +2,7 @@ package com.yongde.blog.controller;
 
 import com.yongde.blog.dto.request.CreateUserRequestDto;
 import com.yongde.blog.dto.request.LoginRequestDto;
+import com.yongde.blog.dto.response.AuthResponseDto;
 import com.yongde.blog.dto.response.UserResponseDto;
 import com.yongde.blog.service.AuthService;
 import com.yongde.blog.service.UserService;
@@ -39,10 +40,11 @@ public class AuthController {
     }
 
     @PostMapping(path = "/login")
-    public String login(
-            @RequestBody LoginRequestDto loginRequestDto
+    public ResponseEntity<AuthResponseDto> login(
+            @Valid @RequestBody LoginRequestDto loginRequestDto
     ){
-        return authService.verifyAccount(loginRequestDto);
+        AuthResponseDto authResponseDto = authService.verifyAccount(loginRequestDto);
+        return ResponseEntity.ok(authResponseDto);
     }
 
 }

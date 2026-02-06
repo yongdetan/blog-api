@@ -1,8 +1,10 @@
 package com.yongde.blog.service.impl;
 
 import com.yongde.blog.service.JWTService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.KeyGenerator;
@@ -47,7 +49,17 @@ public class JWTServiceImpl implements JWTService {
     }
 
     @Override
-    public String extractEmail(String token) {
-        return "";
+    public Claims validateTokenAndReturnClaims(String token) {
+        return Jwts.parser()
+                .verifyWith(KEY)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload();
     }
+
+    @Override
+    public long getExpirationMs() {
+        return EXPIRATION_MS;
+    }
+
 }
