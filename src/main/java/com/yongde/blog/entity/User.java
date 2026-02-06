@@ -1,8 +1,11 @@
 package com.yongde.blog.entity;
 
+import com.yongde.blog.enums.Role;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -23,6 +26,12 @@ public class User {
 
     @Column(nullable = false)
     private String passwordHash;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.REMOVE)
+    private List<Post> posts = new ArrayList<>();
 
     @Column(updatable = false)
     private Instant createdAt;
@@ -54,6 +63,7 @@ public class User {
     public void onCreate() {
         this.createdAt = Instant.now();
         this.updatedAt = Instant.now();
+        this.role = Role.USER;
     }
 
     @PreUpdate

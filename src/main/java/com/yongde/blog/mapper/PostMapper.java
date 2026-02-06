@@ -8,13 +8,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class PostMapper {
 
-    public Post toEntity(CreatePostRequestDto createPostRequestDto) {
-        Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content());
-        post.setCategory(createPostRequestDto.category());
-        post.setTags(createPostRequestDto.tags());
-        return post;
-    }
-
     public PostResponseDto toDto(Post post) {
         return new PostResponseDto(
                 post.getId(),
@@ -23,7 +16,8 @@ public class PostMapper {
                 post.getCategory(),
                 post.getTags(),
                 post.getCreated(),
-                post.getUpdated()
+                post.getUpdated(),
+                post.getAuthor().getId()
         );
     }
 

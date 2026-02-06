@@ -3,10 +3,13 @@ package com.yongde.blog.service.impl;
 import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
 import com.yongde.blog.entity.Post;
+import com.yongde.blog.entity.User;
 import com.yongde.blog.exception.PostNotFoundException;
 import com.yongde.blog.mapper.PostMapper;
 import com.yongde.blog.repository.PostRepository;
+import com.yongde.blog.repository.UserRepository;
 import com.yongde.blog.service.PostService;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -16,17 +19,25 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
         this.postMapper = postMapper;
     }
 
+    @Transactional
     @Override
-    public PostResponseDto createPost(CreatePostRequestDto createPostRequestDto) {
-        Post newPost = postMapper.toEntity(createPostRequestDto);
-        Post savedPost = postRepository.save(newPost);
+    public PostResponseDto createPost(CreatePostRequestDto createPostRequestDto, User author) {
+
+        Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content(), author);
+        post.setCategory(createPostRequestDto.category());
+        post.setTags(createPostRequestDto.tags());
+
+        Post savedPost = postRepository.save(post);
+
         return postMapper.toDto(savedPost);
     }
 
@@ -50,10 +61,13 @@ public class PostServiceImpl implements PostService {
         return postMapper.toDto(post);
     }
 
+    @Transactional
     @Override
-    public PostResponseDto updatePost(Long postId, CreatePostRequestDto createPostRequestDto) {
+    public PostResponseDto updatePost(Long postId, CreatePostRequestDto createPostRequestDto, User author) {
 
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        Post post = postRepository.findPostByIdAndAuthorId(postId, author.getId())
+                .orElseThrow(() -> new PostNotFoundException(postId));
+
         post.setTitle(createPostRequestDto.title());
         post.setContent(createPostRequestDto.content());
         post.setCategory(createPostRequestDto.category());
@@ -65,9 +79,11 @@ public class PostServiceImpl implements PostService {
 
     }
 
+    @Transactional
     @Override
-    public void deletePost(Long postId) {
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+    public void deletePost(Long postId, User author) {
+        Post post = postRepository.findPostByIdAndAuthorId(postId, author.getId())
+                .orElseThrow(() -> new PostNotFoundException(postId));
         postRepository.delete(post);
     }
 }

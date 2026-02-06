@@ -2,10 +2,12 @@ package com.yongde.blog.controller;
 
 import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
+import com.yongde.blog.entity.UserPrincipal;
 import com.yongde.blog.service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -24,9 +26,10 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostResponseDto> createPost(
-            @Valid @RequestBody CreatePostRequestDto createPostRequestDto
+            @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
+            @AuthenticationPrincipal UserPrincipal principal
     ) {
-        PostResponseDto postResponseDto = postService.createPost(createPostRequestDto);
+        PostResponseDto postResponseDto = postService.createPost(createPostRequestDto, principal.getUser());
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{postId}")
@@ -52,9 +55,10 @@ public class PostController {
     @PutMapping(path = "/{postId}")
     public ResponseEntity<PostResponseDto> updatePost(
             @PathVariable Long postId,
-            @Valid @RequestBody CreatePostRequestDto createPostRequestDto
+            @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ){
-        PostResponseDto postResponseDto = postService.updatePost(postId, createPostRequestDto);
+        PostResponseDto postResponseDto = postService.updatePost(postId, createPostRequestDto, userPrincipal.getUser());
         return ResponseEntity.ok(postResponseDto);
     }
 

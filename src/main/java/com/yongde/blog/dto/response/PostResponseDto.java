@@ -10,6 +10,7 @@ public record PostResponseDto(
         String category,
         List<String> tags,
         Instant created,
-        Instant updated
+        Instant updated,
+        Long authorId
 ) {
 }
