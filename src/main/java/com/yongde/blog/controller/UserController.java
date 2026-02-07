@@ -14,5 +14,4 @@ import java.net.URI;
 @RequestMapping(path = "api/v1/users")
 public class UserController {
 
-
 }

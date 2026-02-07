@@ -10,9 +10,11 @@ public interface PostService {
 
     PostResponseDto createPost(CreatePostRequestDto createPostRequestDto, User author);
 
-    List<PostResponseDto> getAllPosts();
+    List<PostResponseDto> getAllPublicPosts();
 
-    PostResponseDto getPost(Long postId);
+    List<PostResponseDto> getAllAuthoredPosts(User author);
+
+    PostResponseDto getPost(Long postId, User author);
 
     PostResponseDto updatePost(Long postId, CreatePostRequestDto createPostRequestDto, User author);
 

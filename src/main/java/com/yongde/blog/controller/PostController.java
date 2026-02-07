@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,17 +39,27 @@ public class PostController {
 
         return ResponseEntity.created(location).body(postResponseDto);
     }
+
     @GetMapping
-    public ResponseEntity<List<PostResponseDto>> getAllPosts() {
-        List<PostResponseDto> posts = postService.getAllPosts();
+    public ResponseEntity<List<PostResponseDto>> getAllPublicPosts() {
+        List<PostResponseDto> posts = postService.getAllPublicPosts();
         return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping(path = "/me")
+    public ResponseEntity<List<PostResponseDto>> getAllAuthoredPosts(
+            @AuthenticationPrincipal UserPrincipal userPrincipal
+    ) {
+        List<PostResponseDto> authoredPosts = postService.getAllAuthoredPosts(userPrincipal.getUser());
+        return ResponseEntity.ok(authoredPosts);
     }
 
     @GetMapping(path = "/{postId}")
     public ResponseEntity<PostResponseDto> getPost(
-            @PathVariable Long postId
+            @PathVariable Long postId,
+            @AuthenticationPrincipal UserPrincipal userPrincipal
     ){
-        PostResponseDto postResponseDto = postService.getPost(postId);
+        PostResponseDto postResponseDto = postService.getPost(postId, userPrincipal.getUser());
         return ResponseEntity.ok(postResponseDto);
     }
 
@@ -64,9 +75,10 @@ public class PostController {
 
     @DeleteMapping(path = "/{postId}")
     public ResponseEntity<Void> deletePost(
+            @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long postId
     ){
-        postService.deletePost(postId);
+        postService.deletePost(postId, userPrincipal.getUser());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

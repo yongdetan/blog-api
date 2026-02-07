@@ -1,5 +1,6 @@
 package com.yongde.blog.entity;
 
+import com.yongde.blog.enums.PostStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -21,6 +22,9 @@ public class Post {
 
     @Column(nullable = false)
     private String content;
+
+    @Column(nullable = false)
+    private PostStatus postStatus;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, name = "user_id")
@@ -64,6 +68,7 @@ public class Post {
         this.created = Instant.now();
         this.updated = Instant.now();
     }
+
     @PreUpdate
     public void onUpdate() {
         this.updated = Instant.now();
@@ -130,5 +135,13 @@ public class Post {
 
     public void setAuthor(User author) {
         this.author = author;
+    }
+
+    public PostStatus getPostStatus() {
+        return postStatus;
+    }
+
+    public void setPostStatus(PostStatus postStatus) {
+        this.postStatus = postStatus;
     }
 }

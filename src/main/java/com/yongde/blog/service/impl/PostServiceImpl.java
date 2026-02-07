@@ -4,6 +4,7 @@ import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
 import com.yongde.blog.entity.Post;
 import com.yongde.blog.entity.User;
+import com.yongde.blog.enums.PostStatus;
 import com.yongde.blog.exception.PostNotFoundException;
 import com.yongde.blog.mapper.PostMapper;
 import com.yongde.blog.repository.PostRepository;
@@ -35,6 +36,7 @@ public class PostServiceImpl implements PostService {
         Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content(), author);
         post.setCategory(createPostRequestDto.category());
         post.setTags(createPostRequestDto.tags());
+        post.setPostStatus(createPostRequestDto.postStatus());
 
         Post savedPost = postRepository.save(post);
 
@@ -42,10 +44,10 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostResponseDto> getAllPosts() {
-        List<Post> posts = postRepository.findAll();
+    public List<PostResponseDto> getAllPublicPosts() {
+        List<Post> publicPosts = postRepository.findAllByPostStatus(PostStatus.PUBLIC);
 
-        return posts.stream()
+        return publicPosts.stream()
                 // equivalent to post -> postMapper.toDto(post) which basically means for
                 // each post in posts, convert it to a PostResponseDto using the postMapper.
                 .map(postMapper::toDto)
@@ -53,11 +55,21 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public PostResponseDto getPost(Long postId) {
+    public List<PostResponseDto> getAllAuthoredPosts(User author) {
+        List<Post> authoredPosts = postRepository.findAllByAuthorId(author.getId());
+
+        return authoredPosts.stream()
+                .map(postMapper::toDto)
+                .toList();
+    }
+
+    @Override
+    public PostResponseDto getPost(Long postId, User author) {
         // orElseThrow() takes in an exceptionSupplier, basically a functional interface that will get executed if needed.
         // here instead of constructing an exceptionSupplier, we use lambda expression.
         // in the background, the compiler converts this lambda expression into a supplier object. it uses target typing to infer.
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PostNotFoundException(postId));
+        Post post = postRepository.findPostByIdAndAuthorId(postId, author.getId())
+                .orElseThrow(() -> new PostNotFoundException(postId));
         return postMapper.toDto(post);
     }
 
@@ -72,6 +84,7 @@ public class PostServiceImpl implements PostService {
         post.setContent(createPostRequestDto.content());
         post.setCategory(createPostRequestDto.category());
         post.setTags(createPostRequestDto.tags());
+        post.setPostStatus(createPostRequestDto.postStatus());
         post.setUpdated(Instant.now());
 
         Post updatedPost = postRepository.save(post);

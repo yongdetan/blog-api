@@ -15,6 +15,7 @@ public class PostMapper {
                 post.getContent(),
                 post.getCategory(),
                 post.getTags(),
+                post.getPostStatus(),
                 post.getCreated(),
                 post.getUpdated(),
                 post.getAuthor().getId()
