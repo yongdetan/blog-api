@@ -52,6 +52,7 @@ public class PostServiceTest {
         ReflectionTestUtils.setField(author, "id", 1L); //using reflection to set authorId. this is done because id setter is not exposed.
 
     }
+
     @Test
     public void createPost_validRequest_returnsPostResponseDto() {
 
