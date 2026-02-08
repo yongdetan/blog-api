@@ -8,7 +8,6 @@ import com.yongde.blog.enums.PostStatus;
 import com.yongde.blog.exception.PostNotFoundException;
 import com.yongde.blog.mapper.PostMapper;
 import com.yongde.blog.repository.PostRepository;
-import com.yongde.blog.repository.UserRepository;
 import com.yongde.blog.service.PostService;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
@@ -20,12 +19,10 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
     private final PostMapper postMapper;
 
-    public PostServiceImpl(PostRepository postRepository, UserRepository userRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
         this.postRepository = postRepository;
-        this.userRepository = userRepository;
         this.postMapper = postMapper;
     }
 
