@@ -4,6 +4,7 @@ import com.yongde.blog.service.JWTService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -20,17 +21,15 @@ public class JWTServiceImpl implements JWTService {
 
     private final SecretKey KEY;
     private static final long EXPIRATION_MS = 1000 * 60 * 60 * 24; //24 hours
-    public JWTServiceImpl() {
-        String secret = System.getenv("JWT_SECRET"); //using env variable to store our secret key
+    public JWTServiceImpl(@Value("${JWT_SECRET}") String secret) {
 
         //ensure that we have set the env variable
-        if (secret == null){
+        if (secret == null || secret.isBlank()){
             throw new IllegalStateException(
                     "JWT_SECRET environment variable must be set."
             );
         };
-
-        this.KEY = Keys.hmacShaKeyFor(System.getenv("JWT_SECRET").getBytes());
+        this.KEY = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
 
