@@ -40,7 +40,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void findPostByIdAndAuthorId_validIdAndAuthorId_returnsPost() {
+    void findPostByIdAndAuthorId_validIdAndAuthorId_returnsPost() {
 
         //Arrange
         User author = persistUser(
