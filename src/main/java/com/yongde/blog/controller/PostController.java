@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -30,7 +29,7 @@ public class PostController {
             @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
             @AuthenticationPrincipal UserPrincipal principal
     ) {
-        PostResponseDto postResponseDto = postService.createPost(createPostRequestDto, principal.getUser());
+        PostResponseDto postResponseDto = postService.createPost(createPostRequestDto, principal.user());
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{postId}")
@@ -50,7 +49,7 @@ public class PostController {
     public ResponseEntity<List<PostResponseDto>> getAllAuthoredPosts(
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ) {
-        List<PostResponseDto> authoredPosts = postService.getAllAuthoredPosts(userPrincipal.getUser());
+        List<PostResponseDto> authoredPosts = postService.getAllAuthoredPosts(userPrincipal.user());
         return ResponseEntity.ok(authoredPosts);
     }
 
@@ -59,7 +58,7 @@ public class PostController {
             @PathVariable Long postId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ){
-        PostResponseDto postResponseDto = postService.getPost(postId, userPrincipal.getUser());
+        PostResponseDto postResponseDto = postService.getPost(postId, userPrincipal.user());
         return ResponseEntity.ok(postResponseDto);
     }
 
@@ -69,7 +68,7 @@ public class PostController {
             @Valid @RequestBody CreatePostRequestDto createPostRequestDto,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ){
-        PostResponseDto postResponseDto = postService.updatePost(postId, createPostRequestDto, userPrincipal.getUser());
+        PostResponseDto postResponseDto = postService.updatePost(postId, createPostRequestDto, userPrincipal.user());
         return ResponseEntity.ok(postResponseDto);
     }
 
@@ -78,7 +77,7 @@ public class PostController {
             @AuthenticationPrincipal UserPrincipal userPrincipal,
             @PathVariable Long postId
     ){
-        postService.deletePost(postId, userPrincipal.getUser());
+        postService.deletePost(postId, userPrincipal.user());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
