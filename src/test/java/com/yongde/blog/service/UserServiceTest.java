@@ -3,6 +3,7 @@ package com.yongde.blog.service;
 import com.yongde.blog.dto.request.CreateUserRequestDto;
 import com.yongde.blog.dto.response.UserResponseDto;
 import com.yongde.blog.entity.User;
+import com.yongde.blog.enums.Role;
 import com.yongde.blog.exception.EmailExistsException;
 import com.yongde.blog.mapper.UserMapper;
 import com.yongde.blog.repository.UserRepository;
@@ -66,6 +67,7 @@ public class UserServiceTest {
                 "Yong De",
                 "Tan",
                 "yongdetan@gmail.com",
+                Role.USER,
                 null,
                 null
         );

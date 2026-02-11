@@ -10,6 +10,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
+//TODO: add user-related features like changing password, email, name.
 @RestController
 @RequestMapping(path = "api/v1/users")
 public class UserController {
