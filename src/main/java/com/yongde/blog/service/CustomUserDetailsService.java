@@ -3,11 +3,13 @@ package com.yongde.blog.service;
 import com.yongde.blog.entity.User;
 import com.yongde.blog.entity.UserPrincipal;
 import com.yongde.blog.repository.UserRepository;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+@NullMarked
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

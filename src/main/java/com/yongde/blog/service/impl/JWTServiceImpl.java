@@ -35,11 +35,12 @@ public class JWTServiceImpl implements JWTService {
 
     @Override
     public String generateToken(Long userId) {
-
-        Map<String, Object> claims = new HashMap<>();
+        //Possible Improvement: include additional information inside JWT token through claims
+        //E.G. including the user's role to save 1 DB access. The downside is that we need to take care of
+        //a scenario where the user is demoted from ADMIN to USER
 
         return Jwts.builder()
-                .claims().add(claims)
+                .claims()
                 .subject(String.valueOf(userId))
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))
