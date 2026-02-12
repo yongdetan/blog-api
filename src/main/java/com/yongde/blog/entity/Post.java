@@ -1,5 +1,6 @@
 package com.yongde.blog.entity;
 
+import com.yongde.blog.enums.PostStatus;
 import jakarta.persistence.*;
 
 import java.time.Instant;
@@ -22,6 +23,13 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
+    @Column(nullable = false)
+    private PostStatus postStatus;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "user_id")
+    private User author;
+
     private String category;
 
     // Basically creating a mapping table in the database to store the collections data structure.
@@ -40,15 +48,19 @@ public class Post {
 
     // DO NOT include id to prevent caller from inserting id.
     // DO NOT include audit fields
-    public Post(String title, String content) {
+    public Post(String title, String content, User author) {
         if (title == null || title.isBlank()) {
             throw new IllegalArgumentException("Post title is required");
         }
         if (content == null || content.isBlank()) {
             throw new IllegalArgumentException("Post content is required");
         }
+        if (author == null) {
+            throw new IllegalArgumentException("Author is required");
+        }
         this.title = title;
         this.content = content;
+        this.author = author;
     }
 
     @PrePersist
@@ -56,6 +68,7 @@ public class Post {
         this.created = Instant.now();
         this.updated = Instant.now();
     }
+
     @PreUpdate
     public void onUpdate() {
         this.updated = Instant.now();
@@ -114,5 +127,21 @@ public class Post {
 
     public void setUpdated(Instant updated) {
         this.updated = updated;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
+    public PostStatus getPostStatus() {
+        return postStatus;
+    }
+
+    public void setPostStatus(PostStatus postStatus) {
+        this.postStatus = postStatus;
     }
 }
