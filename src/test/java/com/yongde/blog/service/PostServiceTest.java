@@ -105,7 +105,7 @@ public class PostServiceTest {
         PostResponseDto postResponseDto1 = new PostResponseDto(1L, "post1", "content1", null, null, PostStatus.PUBLIC, null, null, author.getId());
         PostResponseDto postResponseDto2 = new PostResponseDto(2L, "post2", "content2", null, null, PostStatus.PUBLIC, null, null, author.getId());
 
-        when(postRepository.findAllByPostStatus(PostStatus.PUBLIC)).thenReturn(List.of(post1,post2));
+        when(postRepository.findAllByStatus(PostStatus.PUBLIC)).thenReturn(List.of(post1,post2));
         when(postMapper.toDto(post1)).thenReturn(postResponseDto1);
         when(postMapper.toDto(post2)).thenReturn(postResponseDto2);
 
@@ -125,7 +125,7 @@ public class PostServiceTest {
                         tuple("post1", "content1", PostStatus.PUBLIC, author.getId()),
                         tuple("post2", "content2", PostStatus.PUBLIC, author.getId())
                 );
-        verify(postRepository).findAllByPostStatus(PostStatus.PUBLIC);
+        verify(postRepository).findAllByStatus(PostStatus.PUBLIC);
         verify(postMapper, times(2)).toDto(any(Post.class));
 
     }

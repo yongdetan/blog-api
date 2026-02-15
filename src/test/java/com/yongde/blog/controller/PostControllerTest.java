@@ -339,7 +339,7 @@
                     .satisfies(response -> {
                         Assertions.assertThat(response.timestamp()).isNotNull();
                         Assertions.assertThat(response.fieldErrors())
-                                .containsKeys("title", "content", "postStatus");
+                                .containsKeys("title", "content", "status");
                     });
         }
 

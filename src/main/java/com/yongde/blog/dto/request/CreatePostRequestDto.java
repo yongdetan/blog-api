@@ -24,7 +24,7 @@ public record CreatePostRequestDto(
         List<String> tags,
 
         @NotNull(message = ERROR_MESSAGE_POST_STATUS_BLANK)
-        PostStatus postStatus
+        PostStatus status
 ) {
 
         private static final String ERROR_MESSAGE_TITLE_BLANK =

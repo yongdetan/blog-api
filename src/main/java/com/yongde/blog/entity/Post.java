@@ -14,20 +14,21 @@ public class Post {
     // Long is a wrapper unlike long.
     // Did not specify the strategy for GeneratedValue, letting JPA pick the best based on chosen db
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String content;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private PostStatus postStatus;
+    private PostStatus status;
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, name = "user_id")
+    @JoinColumn(nullable = false, name = "author_id")
     private User author;
 
     private String category;
@@ -40,9 +41,11 @@ public class Post {
     private List<String> tags;
 
     // audit fields
-    private Instant created;
+    @Column(name = "created_at", updatable = false, nullable = false)
+    private Instant createdAt;
 
-    private Instant updated;
+    @Column(name = "updated_at", nullable = false)
+    private Instant updatedAt;
 
     public Post() {}
 
@@ -65,13 +68,13 @@ public class Post {
 
     @PrePersist
     public void onCreate() {
-        this.created = Instant.now();
-        this.updated = Instant.now();
+        this.createdAt = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @PreUpdate
     public void onUpdate() {
-        this.updated = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     // Getters and Setters
@@ -117,16 +120,16 @@ public class Post {
         this.tags = tags;
     }
 
-    public Instant getCreated() {
-        return created;
+    public Instant getCreatedAt() {
+        return createdAt;
     }
 
-    public Instant getUpdated() {
-        return updated;
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setUpdated(Instant updated) {
-        this.updated = updated;
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
     public User getAuthor() {
@@ -137,11 +140,11 @@ public class Post {
         this.author = author;
     }
 
-    public PostStatus getPostStatus() {
-        return postStatus;
+    public PostStatus getStatus() {
+        return status;
     }
 
-    public void setPostStatus(PostStatus postStatus) {
-        this.postStatus = postStatus;
+    public void setStatus(PostStatus status) {
+        this.status = status;
     }
 }

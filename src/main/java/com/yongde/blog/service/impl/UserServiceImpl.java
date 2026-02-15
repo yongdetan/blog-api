@@ -3,6 +3,7 @@ package com.yongde.blog.service.impl;
 import com.yongde.blog.dto.request.CreateUserRequestDto;
 import com.yongde.blog.dto.response.UserResponseDto;
 import com.yongde.blog.entity.User;
+import com.yongde.blog.enums.Role;
 import com.yongde.blog.exception.EmailExistsException;
 import com.yongde.blog.mapper.UserMapper;
 import com.yongde.blog.repository.UserRepository;
@@ -28,13 +29,18 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
 
+        //normalizing the email address to ensure uniqueness check is valid
+        String normalizedEmail = createUserRequestDto.email().toLowerCase();
+
         // Check whether email already exists in database
         // Flag it here instead of in the controller because if we create our own custom validation, we need to inject repository which would go against layered architecture
-        if (userRepository.findByEmail(createUserRequestDto.email()).isPresent()) {
+        if (userRepository.findByEmail(normalizedEmail).isPresent()) {
             throw new EmailExistsException(createUserRequestDto.email());
         }
 
         User user = userMapper.toEntity(createUserRequestDto);
+        user.setEmail(normalizedEmail);
+        user.setRole(Role.USER);
         user.setPasswordHash(passwordEncoder.encode(user.getPasswordHash()));
         User savedUser = userRepository.save(user);
         return userMapper.toDto(savedUser);

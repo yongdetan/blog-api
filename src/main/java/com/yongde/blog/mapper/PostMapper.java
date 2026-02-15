@@ -1,6 +1,5 @@
 package com.yongde.blog.mapper;
 
-import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
 import com.yongde.blog.entity.Post;
 import org.springframework.stereotype.Component;
@@ -15,9 +14,9 @@ public class PostMapper {
                 post.getContent(),
                 post.getCategory(),
                 post.getTags(),
-                post.getPostStatus(),
-                post.getCreated(),
-                post.getUpdated(),
+                post.getStatus(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
                 post.getAuthor().getId()
         );
     }

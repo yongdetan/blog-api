@@ -27,12 +27,12 @@ A personal project to build a blogging platform from the ground up. Starting wit
 
 ### Phase 1: Foundation & Authentication
 - [x] Post entity with basic CRUD
-- [ ] User entity with basic CRUD
-- [ ] User authentication 
-- [ ] Role-based authorization (User, Admin)
+- [x] User entity with basic CRUD
+- [x] User authentication 
+- [x] Role-based authorization (User, Admin)
 
 ### Phase 2: Content Features & Persistence
-- [ ] Migrate to PostgreSQL (H2 for testing, Postgres for main)
+- [x] Migrate to PostgreSQL (H2 for testing, Postgres for main)
 - [ ] Comment entity with basic CRUD
 - [ ] Pagination
 - [ ] Category & Tag entities (separate from Post)

@@ -13,7 +13,7 @@ public interface PostRepository extends JpaRepository<Post,Long> {
 
     Optional<Post> findPostByIdAndAuthorId(Long id, Long authorId);
 
-    List<Post> findAllByPostStatus(PostStatus postStatus);
+    List<Post> findAllByStatus(PostStatus status);
 
     List<Post> findAllByAuthorId(Long authorId);
 

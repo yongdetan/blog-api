@@ -1,5 +1,6 @@
 package com.yongde.blog.repository;
 
+import com.yongde.blog.TestcontainersConfiguration;
 import com.yongde.blog.entity.Post;
 import com.yongde.blog.entity.User;
 import com.yongde.blog.enums.PostStatus;
@@ -8,16 +9,15 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
 import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
+import org.springframework.context.annotation.Import;
 
 import java.util.List;
 import java.util.Optional;
 
-// We are using DataJpaTest for testing for repo layer
-// Technically, DataJpaTest already configures H2 db but we add AutoConfigureTestDatabase for clarity.
 @DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
+@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
+@Import(TestcontainersConfiguration.class)
 public class PostRepositoryTest {
 
     @Autowired
@@ -35,7 +35,7 @@ public class PostRepositoryTest {
 
     private Post persistPost(String title, String content, User author, PostStatus postStatus) {
         Post post = new Post(title, content, author);
-        post.setPostStatus(postStatus);
+        post.setStatus(postStatus);
         return postRepository.save(post);
     }
 
@@ -73,7 +73,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void findPostByIdAndAuthorId_nonExistentIdAndAuthorId_returnsEmpty() {
+    void findPostByIdAndAuthorId_nonExistentIdAndAuthorId_returnsEmpty() {
         //Arrange
         Long nonExistentPostId = 1234L;
         Long nonExistentAuthorId = 1234L;
@@ -102,7 +102,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void findAllByPostStatus_publicPostStatus_returnsListOfPost() {
+    void findAllByPostStatus_publicPostStatus_returnsListOfPost() {
         User author1 = persistUser(
                 "Yong De",
                 "Tan",
@@ -140,7 +140,7 @@ public class PostRepositoryTest {
                 PostStatus.PUBLIC
         );
 
-        List<Post> retrievedPosts = postRepository.findAllByPostStatus(PostStatus.PUBLIC);
+        List<Post> retrievedPosts = postRepository.findAllByStatus(PostStatus.PUBLIC);
 
         Assertions.assertThat(retrievedPosts)
                 .hasSize(2)
@@ -152,7 +152,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void findAllByPostStatus_publicPostStatus_returnsEmptyList() {
+    void findAllByPostStatus_publicPostStatus_returnsEmptyList() {
         User author1 = persistUser(
                 "Yong De",
                 "Tan",
@@ -190,14 +190,14 @@ public class PostRepositoryTest {
                 PostStatus.PRIVATE
         );
 
-        List<Post> retrievedPosts = postRepository.findAllByPostStatus(PostStatus.PUBLIC);
+        List<Post> retrievedPosts = postRepository.findAllByStatus(PostStatus.PUBLIC);
 
         Assertions.assertThat(retrievedPosts).isEmpty();
 
     }
 
     @Test
-    public void findAllByAuthorId_validAuthorId_returnsListOfPost() {
+    void findAllByAuthorId_validAuthorId_returnsListOfPost() {
         User author1 = persistUser(
                 "Yong De",
                 "Tan",
@@ -247,7 +247,7 @@ public class PostRepositoryTest {
     }
 
     @Test
-    public void findAllByAuthorId_invalidAuthorId_returnsEmptyList() {
+    void findAllByAuthorId_invalidAuthorId_returnsEmptyList() {
         Long nonExistentAuthorId = 1234L;
         User author1 = persistUser(
                 "Yong De",

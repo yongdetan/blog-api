@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
         Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content(), author);
         post.setCategory(createPostRequestDto.category());
         post.setTags(createPostRequestDto.tags());
-        post.setPostStatus(createPostRequestDto.postStatus());
+        post.setStatus(createPostRequestDto.status());
 
         Post savedPost = postRepository.save(post);
 
@@ -42,7 +42,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostResponseDto> getAllPublicPosts() {
-        List<Post> publicPosts = postRepository.findAllByPostStatus(PostStatus.PUBLIC);
+        List<Post> publicPosts = postRepository.findAllByStatus(PostStatus.PUBLIC);
 
         return publicPosts.stream()
                 // equivalent to post -> postMapper.toDto(post) which basically means for
@@ -81,8 +81,8 @@ public class PostServiceImpl implements PostService {
         post.setContent(createPostRequestDto.content());
         post.setCategory(createPostRequestDto.category());
         post.setTags(createPostRequestDto.tags());
-        post.setPostStatus(createPostRequestDto.postStatus());
-        post.setUpdated(Instant.now());
+        post.setStatus(createPostRequestDto.status());
+        post.setUpdatedAt(Instant.now());
 
         Post updatedPost = postRepository.save(post);
         return postMapper.toDto(updatedPost);
