@@ -25,6 +25,9 @@ import java.util.Optional;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 
+
+// TODO:used @Nested to group similar tests, use @DisplayName to explain what the test is about.
+// for getPost(), perhaps I could test more deeply into the 3 scenarios (unauthenticated user viewing nonPublic, authenticated user viewing nonPublic, author viewing nonPublic)
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
 
@@ -166,11 +169,13 @@ public class PostServiceTest {
     }
 
     @Test
-    public void getPost_validRequest_returnsPostResponseDto() {
+    public void getPost_publicPostAndAuthor_returnsPostResponseDto() {
         Post post = new Post("post", "content", author);
-        PostResponseDto postResponseDto = new PostResponseDto(1L, "post", "content", null, null, PostStatus.PUBLIC, null, null, author.getId());
+        post.setStatus(PostStatus.PUBLIC);
+        PostResponseDto postResponseDto = new PostResponseDto(1L, "post", "content", null, null,
+                PostStatus.PUBLIC, null, null, author.getId());
 
-        when(postRepository.findPostByIdAndAuthorId(1L, author.getId()))
+        when(postRepository.findById(1L))
                 .thenReturn(Optional.of(post));
         when(postMapper.toDto(post)).thenReturn(postResponseDto);
 
@@ -182,23 +187,78 @@ public class PostServiceTest {
         Assertions.assertThat(result.postStatus()).isEqualTo(PostStatus.PUBLIC);
         Assertions.assertThat(result.authorId()).isEqualTo(author.getId());
 
-        verify(postRepository).findPostByIdAndAuthorId(1L, author.getId());
+        verify(postRepository).findById(1L);
         verify(postMapper).toDto(post);
+    }
+
+    @Test
+    public void getPost_publicPostAndUnauthenticatedUser_returnsPostResponseDto() {
+        Post post = new Post("post", "content", author);
+        post.setStatus(PostStatus.PUBLIC);
+        PostResponseDto postResponseDto = new PostResponseDto(1L, "post", "content", null, null,
+                PostStatus.PUBLIC, null, null, author.getId());
+
+        when(postRepository.findById(1L))
+                .thenReturn(Optional.of(post));
+        when(postMapper.toDto(post)).thenReturn(postResponseDto);
+
+        PostResponseDto result = postService.getPost(1L, null);
+
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.postStatus()).isEqualTo(PostStatus.PUBLIC);
+
+        verify(postRepository).findById(1L);
+        verify(postMapper).toDto(post);
+    }
+
+    @Test
+    public void getPost_draftPostAndUnauthenticatedUser_throwsPostNotFoundException() {
+        Long postId = 1L;
+        Post post = new Post("post", "content", author);
+        post.setStatus(PostStatus.DRAFT);
+
+        when(postRepository.findById(postId))
+                .thenReturn(Optional.of(post));
+
+        Assertions.assertThatThrownBy(() -> postService.getPost(postId, null))
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessageContaining(postId.toString());
+
+        verify(postRepository).findById(postId);
+        verifyNoInteractions(postMapper);
+    }
+
+    @Test
+    public void getPost_draftPostAndNonAuthor_throwsPostNotFoundException() {
+        Long postId = 1L;
+        User otherUser = new User("De Yong", "Tan", "deyongtan@gmail.com", "password");
+
+        Post post = new Post("post", "content", author);
+        post.setStatus(PostStatus.DRAFT);
+
+        when(postRepository.findById(postId))
+                .thenReturn(Optional.of(post));
+
+        Assertions.assertThatThrownBy(() -> postService.getPost(postId, otherUser))
+                .isInstanceOf(PostNotFoundException.class)
+                .hasMessageContaining(postId.toString());
+
+        verify(postRepository).findById(postId);
+        verifyNoInteractions(postMapper);
     }
 
     @Test
     public void getPost_invalidPost_throwsPostNotFoundException() {
         Long postId = 1L;
 
-        // cannot use null or anything similar. must use optional because findById returns optional
-        when(postRepository.findPostByIdAndAuthorId(postId, author.getId()))
+        when(postRepository.findById(postId))
                 .thenReturn(Optional.empty());
 
         Assertions.assertThatThrownBy(() -> postService.getPost(postId, author))
                 .isInstanceOf(PostNotFoundException.class)
                 .hasMessageContaining(postId.toString());
 
-        verify(postRepository).findPostByIdAndAuthorId(postId, author.getId());
+        verify(postRepository).findById(postId);
         verifyNoInteractions(postMapper);
     }
 
