@@ -52,7 +52,16 @@ public class GlobalExceptionHandler {
         Map<String, String> errorMessages = Map.of("email", ex.getMessage());
 
         ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
-        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CategoryNameExistsException.class)
+    public ResponseEntity<ApiResponse> handleCategoryNameExistsException(CategoryNameExistsException ex) {
+
+        Map<String, String> errorMessages = Map.of("categoryName", ex.getMessage());
+
+        ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
 
 }

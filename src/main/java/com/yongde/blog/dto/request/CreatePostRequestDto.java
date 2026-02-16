@@ -10,11 +10,11 @@ import java.util.List;
 public record CreatePostRequestDto(
 
         @NotBlank(message = ERROR_MESSAGE_TITLE_BLANK)
-        @Size(min = 1, max = 255, message = ERROR_MESSAGE_TITLE_LENGTH)
+        @Size(max = 255, message = ERROR_MESSAGE_TITLE_LENGTH)
         String title,
 
         @NotBlank(message = ERROR_MESSAGE_CONTENT_BLANK)
-        @Size(max=5000, message = ERROR_MESSAGE_CONTENT_LENGTH)
+        @Size(min=1)
         String content,
 
         @Nullable
@@ -35,9 +35,6 @@ public record CreatePostRequestDto(
 
         private static final String ERROR_MESSAGE_CONTENT_BLANK =
                 "Content must not be blank.";
-
-        private static final String ERROR_MESSAGE_CONTENT_LENGTH =
-                "Content must not exceed 5000 characters.";
 
         private static final String ERROR_MESSAGE_POST_STATUS_BLANK =
                 "Post status must not be blank.";
