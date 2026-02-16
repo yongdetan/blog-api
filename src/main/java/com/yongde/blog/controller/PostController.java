@@ -58,7 +58,10 @@ public class PostController {
             @PathVariable Long postId,
             @AuthenticationPrincipal UserPrincipal userPrincipal
     ){
-        PostResponseDto postResponseDto = postService.getPost(postId, userPrincipal.user());
+        PostResponseDto postResponseDto = postService.getPost(
+                postId,
+                userPrincipal != null ? userPrincipal.user() : null);
+
         return ResponseEntity.ok(postResponseDto);
     }
 

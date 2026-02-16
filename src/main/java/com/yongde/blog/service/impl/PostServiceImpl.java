@@ -65,8 +65,20 @@ public class PostServiceImpl implements PostService {
         // orElseThrow() takes in an exceptionSupplier, basically a functional interface that will get executed if needed.
         // here instead of constructing an exceptionSupplier, we use lambda expression.
         // in the background, the compiler converts this lambda expression into a supplier object. it uses target typing to infer.
-        Post post = postRepository.findPostByIdAndAuthorId(postId, author.getId())
+
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new PostNotFoundException(postId));
+
+        // authors can always view their own posts regardless of status
+        if (author != null && author.equals(post.getAuthor())) {
+            return postMapper.toDto(post);
+        }
+
+        // non-author can only view public post.
+        if(post.getStatus() != PostStatus.PUBLIC) {
+            throw new PostNotFoundException(postId);
+        }
+
         return postMapper.toDto(post);
     }
 
