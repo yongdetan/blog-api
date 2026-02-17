@@ -12,7 +12,7 @@ public class PostMapper {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getCategory(),
+                post.getCategory().getName(),
                 post.getTags(),
                 post.getStatus(),
                 post.getCreatedAt(),

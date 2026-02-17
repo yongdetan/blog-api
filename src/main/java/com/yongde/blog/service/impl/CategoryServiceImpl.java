@@ -4,11 +4,13 @@ import com.yongde.blog.dto.request.CreateCategoryRequestDto;
 import com.yongde.blog.dto.response.CategoryResponseDto;
 import com.yongde.blog.entity.Category;
 import com.yongde.blog.exception.CategoryNameExistsException;
+import com.yongde.blog.exception.CategoryNotFoundException;
 import com.yongde.blog.mapper.CategoryMapper;
 import com.yongde.blog.repository.CategoryRepository;
 import com.yongde.blog.service.CategoryService;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -44,21 +46,43 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public List<CategoryResponseDto> getAllCategories() {
-        return List.of();
+
+        List<Category> categories = categoryRepository.findAll();
+
+        return categories.stream()
+                .map(categoryMapper::toDto)
+                .toList();
     }
 
     @Override
     public CategoryResponseDto getCategory(Long categoryId) {
-        return null;
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+
+        return categoryMapper.toDto(category);
     }
 
     @Override
-    public CategoryResponseDto updateCategory(Long categoryId) {
-        return null;
+    public CategoryResponseDto updateCategory(Long categoryId, CreateCategoryRequestDto createCategoryRequestDto) {
+
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+
+        category.setName(createCategoryRequestDto.name());
+        category.setDescription(createCategoryRequestDto.description());
+        category.setUpdatedAt(Instant.now());
+
+        Category updatedCategory = categoryRepository.save(category);
+        return categoryMapper.toDto(updatedCategory);
     }
 
     @Override
     public void deleteCategory(Long categoryId) {
 
+        Category category = categoryRepository.findById(categoryId)
+                .orElseThrow(() -> new CategoryNotFoundException(categoryId));
+
+        categoryRepository.delete(category);
     }
 }

@@ -9,7 +9,7 @@ public record PostResponseDto(
         Long id,
         String title,
         String content,
-        String category,
+        String categoryName,
         List<String> tags,
         PostStatus postStatus,
         Instant created,

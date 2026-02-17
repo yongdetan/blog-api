@@ -31,7 +31,9 @@ public class Post {
     @JoinColumn(nullable = false, name = "author_id")
     private User author;
 
-    private String category;
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, name = "category_id")
+    private Category category;
 
     // Basically creating a mapping table in the database to store the collections data structure.
     // ElementCollection is required, the remaining 2 is optional but is recommended if we want to be more specific.
@@ -104,11 +106,11 @@ public class Post {
         this.content = content;
     }
 
-    public String getCategory() {
+    public Category getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(Category category) {
         this.category = category;
     }
 

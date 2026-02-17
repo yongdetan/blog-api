@@ -2,11 +2,14 @@ package com.yongde.blog.service.impl;
 
 import com.yongde.blog.dto.request.CreatePostRequestDto;
 import com.yongde.blog.dto.response.PostResponseDto;
+import com.yongde.blog.entity.Category;
 import com.yongde.blog.entity.Post;
 import com.yongde.blog.entity.User;
 import com.yongde.blog.enums.PostStatus;
+import com.yongde.blog.exception.CategoryNotFoundException;
 import com.yongde.blog.exception.PostNotFoundException;
 import com.yongde.blog.mapper.PostMapper;
+import com.yongde.blog.repository.CategoryRepository;
 import com.yongde.blog.repository.PostRepository;
 import com.yongde.blog.service.PostService;
 import jakarta.transaction.Transactional;
@@ -20,18 +23,24 @@ public class PostServiceImpl implements PostService {
 
     private final PostRepository postRepository;
     private final PostMapper postMapper;
+    private final CategoryRepository categoryRepository;
 
-    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper) {
+    public PostServiceImpl(PostRepository postRepository, PostMapper postMapper, CategoryRepository categoryRepository) {
         this.postRepository = postRepository;
         this.postMapper = postMapper;
+        this.categoryRepository = categoryRepository;
     }
 
     @Transactional
     @Override
     public PostResponseDto createPost(CreatePostRequestDto createPostRequestDto, User author) {
 
+        //check to see if category exists. throw exception if it does not.
+        Category category = categoryRepository.findById(createPostRequestDto.categoryId())
+                .orElseThrow(() -> new CategoryNotFoundException(createPostRequestDto.categoryId()));
+
         Post post = new Post(createPostRequestDto.title(), createPostRequestDto.content(), author);
-        post.setCategory(createPostRequestDto.category());
+        post.setCategory(category);
         post.setTags(createPostRequestDto.tags());
         post.setStatus(createPostRequestDto.status());
 
@@ -89,9 +98,12 @@ public class PostServiceImpl implements PostService {
         Post post = postRepository.findPostByIdAndAuthorId(postId, author.getId())
                 .orElseThrow(() -> new PostNotFoundException(postId));
 
+        Category category = categoryRepository.findById(createPostRequestDto.categoryId())
+                .orElseThrow(() -> new CategoryNotFoundException(createPostRequestDto.categoryId()));
+
         post.setTitle(createPostRequestDto.title());
         post.setContent(createPostRequestDto.content());
-        post.setCategory(createPostRequestDto.category());
+        post.setCategory(category);
         post.setTags(createPostRequestDto.tags());
         post.setStatus(createPostRequestDto.status());
         post.setUpdatedAt(Instant.now());

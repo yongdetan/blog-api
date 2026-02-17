@@ -17,8 +17,8 @@ public record CreatePostRequestDto(
         @Size(min=1)
         String content,
 
-        @Nullable
-        String category,
+        @NotNull(message = ERROR_MESSAGE_CATEGORY_NULL)
+        Long categoryId,
 
         @Nullable
         List<String> tags,
@@ -38,4 +38,7 @@ public record CreatePostRequestDto(
 
         private static final String ERROR_MESSAGE_POST_STATUS_BLANK =
                 "Post status must not be blank.";
+
+        private static final String ERROR_MESSAGE_CATEGORY_NULL =
+                "Post category is required.";
 }

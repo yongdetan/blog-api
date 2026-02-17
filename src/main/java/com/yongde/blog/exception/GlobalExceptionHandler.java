@@ -2,15 +2,13 @@ package com.yongde.blog.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -62,6 +60,23 @@ public class GlobalExceptionHandler {
 
         ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(CategoryNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleCategoryNotFoundException(CategoryNotFoundException ex) {
+
+        Map<String, String> errorMessages = Map.of("category", ex.getMessage());
+
+        ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<?> handleBadJsonException(HttpMessageNotReadableException ex) {
+        Map<String, String> errorMessages = Map.of("request", "Malformed JSON request body");
+
+        ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
 }

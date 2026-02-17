@@ -10,7 +10,6 @@ public record CategoryResponseDto(
         Long id,
         String name,
         String description,
-        List<Post> posts,
         Instant createdAt,
         Instant updatedAt
 ) {
