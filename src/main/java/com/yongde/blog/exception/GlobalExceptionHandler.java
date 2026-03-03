@@ -79,4 +79,12 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(CategoryNameExistsException.class)
+    public ResponseEntity<ApiResponse> handleTagNameExistsException(TagNameExistsException ex) {
+
+        Map<String, String> errorMessages = Map.of("tagName", ex.getMessage());
+
+        ApiResponse errorResponse = new ApiResponse(Instant.now(), errorMessages);
+        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
+    }
 }

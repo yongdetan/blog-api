@@ -35,12 +35,13 @@ public class Post {
     @JoinColumn(nullable = false, name = "category_id")
     private Category category;
 
-    // Basically creating a mapping table in the database to store the collections data structure.
-    // ElementCollection is required, the remaining 2 is optional but is recommended if we want to be more specific.
-    @ElementCollection
-    @CollectionTable(name = "post_tags", joinColumns = @JoinColumn(name = "post_id"))
-    @Column(name = "tag")
-    private List<String> tags;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "post_tag",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id")
+    )
+    private List<Tag> tags;
 
     // audit fields
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -114,11 +115,11 @@ public class Post {
         this.category = category;
     }
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

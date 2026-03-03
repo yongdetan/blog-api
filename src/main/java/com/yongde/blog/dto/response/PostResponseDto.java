@@ -1,5 +1,6 @@
 package com.yongde.blog.dto.response;
 
+import com.yongde.blog.entity.Tag;
 import com.yongde.blog.enums.PostStatus;
 
 import java.time.Instant;
@@ -10,7 +11,7 @@ public record PostResponseDto(
         String title,
         String content,
         String categoryName,
-        List<String> tags,
+        List<Tag> tags,
         PostStatus postStatus,
         Instant created,
         Instant updated,
